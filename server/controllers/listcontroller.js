@@ -1,12 +1,13 @@
 let router = require('express').Router();
 let List = require('../db').import('../models/watchList')
 let validateSession = require('../middleware/validate-session');
+//List.sync({force: 'true'})
 
 router.post('/new', validateSession, (req, res) => {
     List.create({
         movieImage: req.body.movieImage,
         isWatched: false,
-        owner: req.user.id
+        userId: req.user.id
     }).then(
         createSucces = (data) => {
             res.json({
@@ -46,11 +47,19 @@ router.delete('/delete/:id', validateSession, function(req, res) {
     .catch(err => res.status(500).json({error: err}))
 })
 
+router.delete('/deleteall/:userId', validateSession, function(req, res) {
+    List.destroy({
+        where: {userId: req.params.userId}
+    })
+    .then(data => res.status(200).json(data))
+    .catch(err => res.status(500).json({error: err}))
+})
+
 router.put('/update/:id', validateSession, (req, res) => {
     List.update({
         movieImage: req.body.movieImage,
         isWatched: req.body.isWatched,
-        owner: req.user.id
+        userId: req.user.id
     }, {where: {id: req.params.id}})
     .then(setting => res.status(200).json(setting))
     .catch(setting => res.json(req.errors))

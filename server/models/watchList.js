@@ -7,10 +7,6 @@ module.exports = function (sequelize, DataTypes) {
         isWatched: {
             type: DataTypes.BOOLEAN,
             allowNull: false
-        },
-        owner: {
-            type: DataTypes.INTEGER,
-            allowNull: false
         }
     })
     return listInfo
