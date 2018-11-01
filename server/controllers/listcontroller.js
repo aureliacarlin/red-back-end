@@ -1,12 +1,13 @@
 let router = require('express').Router();
 let List = require('../db').import('../models/watchList')
 let validateSession = require('../middleware/validate-session');
+//List.sync({force: 'true'})
 
 router.post('/new', validateSession, (req, res) => {
     List.create({
         movieImage: req.body.movieImage,
         isWatched: false,
-        owner: req.user.id
+        userId: req.user.id
     }).then(
         createSucces = (data) => {
             res.json({
@@ -50,7 +51,7 @@ router.put('/update/:id', validateSession, (req, res) => {
     List.update({
         movieImage: req.body.movieImage,
         isWatched: req.body.isWatched,
-        owner: req.user.id
+        userId: req.user.id
     }, {where: {id: req.params.id}})
     .then(setting => res.status(200).json(setting))
     .catch(setting => res.json(req.errors))

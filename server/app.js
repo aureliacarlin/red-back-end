@@ -9,7 +9,8 @@ let list = require('./controllers/listcontroller')
 const bodyParser = require('body-parser');
 app.use(bodyParser.json())
 app.use(require('./middleware/headers'))
-sequelize.sync();
+//sequelize.sync();
+require('./config/associations')
 app.listen(4000, function () {
     console.log('App is listening on 4000')
 })
