@@ -47,6 +47,14 @@ router.delete('/delete/:id', validateSession, function(req, res) {
     .catch(err => res.status(500).json({error: err}))
 })
 
+router.delete('/deleteall/:userId', validateSession, function(req, res) {
+    List.destroy({
+        where: {userId: req.params.userId}
+    })
+    .then(data => res.status(200).json(data))
+    .catch(err => res.status(500).json({error: err}))
+})
+
 router.put('/update/:id', validateSession, (req, res) => {
     List.update({
         movieImage: req.body.movieImage,
