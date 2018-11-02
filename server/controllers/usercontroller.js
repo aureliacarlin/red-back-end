@@ -3,13 +3,15 @@ let User = require('../db').import('../models/user')
 let bcrypt = require('bcryptjs')
 let jwt = require('jsonwebtoken')
 let validateSession = require('../middleware/validate-session')
+//User.sync({force: 'true'})
 
 router.post('/signup', (req, res) => {
     User.create({
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         userEmail: req.body.userEmail,
-        password: bcrypt.hashSync(req.body.password, 10)
+        password: bcrypt.hashSync(req.body.password, 10),
+        isAdmin: false
     })
     .then(
         createSuccess = (user) => {
@@ -39,7 +41,8 @@ router.post('/signin', (req, res) => {
                         res.json({
                             user: user,
                             message: 'Successfully authenticated',
-                            sessionToken: token
+                            sessionToken: token,
+                            isAdmin: user.isAdmin
                         })
                     } else {
                         res.status(502).send({error: 'bad gateway'})
@@ -65,7 +68,8 @@ router.put('/update/:id', (req, res) => {
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             userEmail: req.body.userEmail,
-            password: bcrypt.hashSync(req.body.password, 10)
+            password: bcrypt.hashSync(req.body.password, 10),
+            isAdmin: false
         }, {where: {id: req.params.id}})
             .then(user => res.status(200).json(user))
             .catch(err => res.json(req.errors))
