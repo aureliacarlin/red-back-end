@@ -27,7 +27,7 @@ router.get('/', (req, res) => {
 
 router.get('/getmine', validateSession, function (req, res) {
     List.findAll({
-        where: {owner: req.user.id}
+        where: {userId: req.user.id}
     })
     .then(
         function findAllSuccess(data) {
@@ -49,7 +49,7 @@ router.delete('/delete/:id', validateSession, function(req, res) {
 
 router.delete('/deleteall/:userId', validateSession, function(req, res) {
     List.destroy({
-        where: {userId: req.params.userId}
+        where: {userId: req.params.id}
     })
     .then(data => res.status(200).json(data))
     .catch(err => res.status(500).json({error: err}))
