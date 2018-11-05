@@ -21,7 +21,9 @@ router.post('/signup', (req, res) => {
             res.json({
                 user: user,
                 message: 'user created',
-                sessionToken: token
+                sessionToken: token,
+                isAdmin: user.isAdmin,
+                id: user.id
             })
         },
         createError = err => res.send(500, err.message)
@@ -42,7 +44,8 @@ router.post('/signin', (req, res) => {
                             user: user,
                             message: 'Successfully authenticated',
                             sessionToken: token,
-                            isAdmin: user.isAdmin
+                            isAdmin: user.isAdmin,
+                            id: user.id
                         })
                     } else {
                         res.status(502).send({error: 'bad gateway'})
@@ -56,6 +59,11 @@ router.post('/signin', (req, res) => {
     )
 })
 
+router.get('/:id', validateSession, (req, res) => {
+    User.findOne({ where: {id: req.params.id}})
+    .then(user => res.status(200).json(user))
+    .catch(err => res.status(500).json({error: err})) 
+})
 router.get('/', validateSession, (req, res) => {
     User.findAll()
     .then(user => res.status(200).json(user))
@@ -69,7 +77,7 @@ router.put('/update/:id', (req, res) => {
             lastName: req.body.lastName,
             userEmail: req.body.userEmail,
             password: bcrypt.hashSync(req.body.password, 10),
-            isAdmin: false
+            isAdmin: true
         }, {where: {id: req.params.id}})
             .then(user => res.status(200).json(user))
             .catch(err => res.json(req.errors))
