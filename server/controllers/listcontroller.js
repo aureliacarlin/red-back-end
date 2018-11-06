@@ -6,6 +6,7 @@ let validateSession = require('../middleware/validate-session');
 router.post('/new', validateSession, (req, res) => {
     List.create({
         movieImage: req.body.movieImage,
+        url: req.body.url,
         isWatched: false,
         userId: req.user.id
     }).then(
@@ -58,6 +59,7 @@ router.delete('/deleteall/:userId', validateSession, function(req, res) {
 router.put('/update/:id', validateSession, (req, res) => {
     List.update({
         movieImage: req.body.movieImage,
+        url: req.body.url,
         isWatched: req.body.isWatched,
         userId: req.user.id
     }, {where: {id: req.params.id}})

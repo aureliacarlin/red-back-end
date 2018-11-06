@@ -77,7 +77,7 @@ router.put('/update/:id', (req, res) => {
             lastName: req.body.lastName,
             userEmail: req.body.userEmail,
             password: bcrypt.hashSync(req.body.password, 10),
-            isAdmin: true
+            isAdmin: false
         }, {where: {id: req.params.id}})
             .then(user => res.status(200).json(user))
             .catch(err => res.json(req.errors))
@@ -85,6 +85,23 @@ router.put('/update/:id', (req, res) => {
         res.status(500).json(req.errors)
     }
 })
+
+// router.put('/update', (req, res) => {
+//     if (!req.errors) {
+//         User.update({where: {id: req.body.id}}, {
+//             id: req.body.id,
+//             firstName: req.body.firstName,
+//             lastName: req.body.lastName,
+//             userEmail: req.body.userEmail,
+//             password: bcrypt.hashSync(req.body.password, 10),
+//             isAdmin: true
+//         })
+//             .then(user => res.status(200).json(user))
+//             .catch(err => res.json(req.errors))
+//     } else {
+//         res.status(500).json(req.errors)
+//     }
+// })
 
 router.delete('/delete/:id', validateSession, (req, res) => {
     User.destroy({ where: {id: req.params.id}})
